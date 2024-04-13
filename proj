@@ -941,3 +941,627 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 '''
+
+'''  6  car-2 '''
+'''
+#include <windows.h>
+
+#include <GL/glut.h>
+#include <stdlib.h>
+
+// Define the camera position
+GLfloat ex = 0.0, ey = 1.0, ez = 5.0;
+
+// Function to initialize the OpenGL settings
+void init()
+{
+    glEnable(GL_DEPTH_TEST); // Enable depth testing
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, 1.0, 1.0, 100.0); // Set perspective projection
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+// Function to draw the car
+void drawCar()
+{
+    // Set the color for the car body
+    glColor3f(0.0, 0.0, 1.0); // Blue color
+
+    // Draw the car body as a box
+    glPushMatrix();
+    glTranslatef(0.0, 0.5, 0.0); // Translate the car body up
+    glScalef(2.0, 0.5, 1.0); // Scale the car body
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the car roof as a box
+    glColor3f(1.0,0.0,0.0);
+    glPushMatrix();
+    glTranslatef(0.0, 1.0, 0.0); // Translate the roof up
+    glScalef(1.0, 0.5, 1.0); // Scale the roof
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the wheels as spheres
+    glColor3f(1.0, 1.0, 1.0); // Black color
+    glPushMatrix();
+    glTranslatef(-0.8, 0.1, 0.5); // Front left wheel
+    glutSolidSphere(0.2, 20, 20);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.8, 0.1, 0.5); // Front right wheel
+    glutSolidSphere(0.2, 20, 20);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-0.8, 0.1, -0.5); // Back left wheel
+    glutSolidSphere(0.2, 20, 20);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.8, 0.1, -0.5); // Back right wheel
+    glutSolidSphere(0.2, 20, 20);
+    glPopMatrix();
+}
+
+// Display function to render the scene
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(ex, ey, ez, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    drawCar();
+    glutSwapBuffers();
+}
+
+// Reshape function to handle window resizing
+void reshape(int width, int height)
+{
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 1.0, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+// Keyboard function to handle input
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 27: // ESC key
+        exit(0);
+        break;
+    case '+':
+        ez -= 0.5; // Move the camera closer
+        break;
+    case '-':
+        ez += 0.5; // Move the camera further
+        break;
+    default:
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Arrow key function to handle special keys
+void specialKeys(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_LEFT:
+        ex -= 0.2; // Move the camera left
+        break;
+    case GLUT_KEY_RIGHT:
+        ex += 0.2; // Move the camera right
+        break;
+    case GLUT_KEY_UP:
+        ey += 0.2; // Move the camera up
+        break;
+    case GLUT_KEY_DOWN:
+        ey -= 0.2; // Move the camera down
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Main function
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(640, 480);
+    glutInitWindowPosition(10, 10);
+    glutCreateWindow("3D Car Projection");
+
+    init();
+
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);
+
+    glutMainLoop();
+
+    return 0;
+}
+'''
+
+''' 7  Projection house 2 '''
+'''
+#include <windows.h>
+
+#include <GL/glut.h>
+#include <stdlib.h>
+
+// Define the camera position
+GLfloat ex = 0.0, ey = 1.0, ez = 5.0;
+
+// Function to initialize the OpenGL settings
+void init()
+{
+    glEnable(GL_DEPTH_TEST); // Enable depth testing
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, 1.0, 1.0, 100.0); // Set perspective projection
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+// Function to draw the house
+void drawHouse()
+{
+    // Draw the base of the house (a cube)
+    glColor3f(0.7, 0.5, 0.3); // Brown color
+    glPushMatrix();
+    glTranslatef(0.0, -0.5, 0.0); // Translate the base down
+    glScalef(3.0, 1.0, 2.0); // Scale the base
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the roof (a pyramid)
+    glColor3f(1.0, 0.0, 0.0); // Red color
+    glPushMatrix();
+    glTranslatef(0.0, 0.5, 0.0); // Translate the roof up
+    glBegin(GL_TRIANGLES);
+    // Front face
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(-1.5, 0.5, 1.0);
+    glVertex3f(1.5, 0.5, 1.0);
+    // Back face
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(-1.5, 0.5, -1.0);
+    glVertex3f(1.5, 0.5, -1.0);
+    // Left face
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(-1.5, 0.5, -1.0);
+    glVertex3f(-1.5, 0.5, 1.0);
+    // Right face
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(1.5, 0.5, -1.0);
+    glVertex3f(1.5, 0.5, 1.0);
+    glEnd();
+    glPopMatrix();
+
+    // Draw the door (a rectangle)
+    glColor3f(0.6, 0.3, 0.0); // Dark brown color
+    glPushMatrix();
+    glTranslatef(0.0, -0.5, 1.001); // Position the door
+    glScalef(0.3, 0.6, 0.05); // Width, height, depth
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw windows (rectangles)
+    glColor3f(0.0, 0.8, 1.0); // Light blue color
+    // Left window
+    glPushMatrix();
+    glTranslatef(-0.8, 0.0, 1.001); // Position the window
+    glScalef(0.4, 0.4, 0.05); // Width, height, depth
+    glutSolidCube(1.0);
+    glPopMatrix();
+    // Right window
+    glPushMatrix();
+    glTranslatef(0.8, 0.0, 1.001); // Position the window
+    glScalef(0.4, 0.4, 0.05); // Width, height, depth
+    glutSolidCube(1.0);
+    glPopMatrix();
+}
+
+// Display function to render the scene
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(ex, ey, ez, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    drawHouse();
+    glutSwapBuffers();
+}
+
+// Reshape function to handle window resizing
+void reshape(int width, int height)
+{
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 1.0, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+// Keyboard function to handle input
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 27: // ESC key
+        exit(0);
+        break;
+    case '+':
+        ez -= 0.5; // Move the camera closer
+        break;
+    case '-':
+        ez += 0.5; // Move the camera further
+        break;
+    default:
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Arrow key function to handle special keys
+void specialKeys(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_LEFT:
+        ex -= 0.2; // Move the camera left
+        break;
+    case GLUT_KEY_RIGHT:
+        ex += 0.2; // Move the camera right
+        break;
+    case GLUT_KEY_UP:
+        ey += 0.2; // Move the camera up
+        break;
+    case GLUT_KEY_DOWN:
+        ey -= 0.2; // Move the camera down
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Main function
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(640, 480);
+    glutInitWindowPosition(10, 10);
+    glutCreateWindow("3D House Projection");
+
+    init();
+
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);
+
+    glutMainLoop();
+
+    return 0;
+}
+'''
+
+''' 8) satellite '''
+
+
+#include <windows.h>
+#include <GL/glut.h>
+#include <stdlib.h>
+
+// Define the camera position
+GLfloat ex = 0.0, ey = 1.5, ez = 10.0;
+
+// Function to initialize the OpenGL settings
+void init()
+{
+    glEnable(GL_DEPTH_TEST); // Enable depth testing
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, 1.0, 1.0, 100.0); // Set perspective projection
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+// Function to draw the aircraft
+void drawAircraft()
+{
+    // Draw the fuselage (a cylinder)
+    glColor3f(0.5, 0.5, 0.5); // Gray color
+    glPushMatrix();
+    glTranslatef(0.0, 0.0, 0.0); // Position the fuselage
+    glRotatef(90, 1.0, 0.0, 0.0); // Rotate the fuselage to align with the Z-axis
+    GLUquadric* quad = gluNewQuadric();
+    gluCylinder(quad, 0.5, 0.5, 3.0, 32, 32);
+    gluDeleteQuadric(quad);
+    glPopMatrix();
+
+    // Draw the wings (rectangles)
+    glColor3f(0.0, 0.8, 0.0); // Green color
+    glPushMatrix();
+    glTranslatef(0.0, 0.0, -0.5); // Position the wings
+    glScalef(4.0, 0.1, 0.5); // Width, height, depth
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the tail (a vertical rectangle)
+    glColor3f(1.0, 0.0, 0.0); // Red color
+    glPushMatrix();
+    glTranslatef(0.0, 0.75, -1.5); // Position the tail
+    glScalef(0.5, 1.0, 0.1); // Width, height, depth
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the cockpit (a sphere)
+    glColor3f(0.0, 0.0, 1.0); // Blue color
+    glPushMatrix();
+    glTranslatef(0.0, 0.2, 1.0); // Position the cockpit
+    glutSolidSphere(0.3, 32, 32);
+    glPopMatrix();
+}
+
+// Display function to render the scene
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(ex, ey, ez, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    drawAircraft();
+    glutSwapBuffers();
+}
+
+// Reshape function to handle window resizing
+void reshape(int width, int height)
+{
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 1.0, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+// Keyboard function to handle input
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 27: // ESC key
+        exit(0);
+        break;
+    case '+':
+        ez -= 0.5; // Move the camera closer
+        break;
+    case '-':
+        ez += 0.5; // Move the camera further
+        break;
+    default:
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Arrow key function to handle special keys
+void specialKeys(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_LEFT:
+        ex -= 0.2; // Move the camera left
+        break;
+    case GLUT_KEY_RIGHT:
+        ex += 0.2; // Move the camera right
+        break;
+    case GLUT_KEY_UP:
+        ey += 0.2; // Move the camera up
+        break;
+    case GLUT_KEY_DOWN:
+        ey -= 0.2; // Move the camera down
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Main function
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(640, 480);
+    glutInitWindowPosition(10, 10);
+    glutCreateWindow("3D Aircraft Projection");
+
+    init();
+
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);
+
+    glutMainLoop();
+
+    return 0;
+}
+
+''' 9) Aeroplane '''
+
+#include <windows.h>
+
+#include <GL/glut.h>
+
+// Define the camera position
+GLfloat ex = 5.0, ey = 5.0, ez = 10.0;
+
+// Lighting and material properties
+GLfloat lightPosition[] = {1.0, 1.0, 1.0, 0.0}; // Light position
+GLfloat whiteLight[] = {1.0, 1.0, 1.0, 1.0}; // White light
+GLfloat matSpecular[] = {1.0, 1.0, 1.0, 1.0}; // Specular reflection
+GLfloat matShininess[] = {50.0}; // Shininess
+
+// Initialize OpenGL settings
+void init() {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, whiteLight);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
+    glClearColor(0.0, 0.0, 0.0, 1.0); // Black background
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, 1.0, 1.0, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(ex, ey, ez, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+}
+
+// Function to draw a beautiful airplane
+void drawAirplane() {
+    // Draw the fuselage (a cylinder)
+    glColor3f(0.7, 0.7, 0.7); // Light gray color
+    glPushMatrix();
+    GLUquadric* quad = gluNewQuadric();
+    glTranslatef(0.0, 0.0, 0.0); // Position the fuselage
+    glRotatef(90, 1.0, 0.0, 0.0); // Rotate the fuselage to align with the Z-axis
+    gluCylinder(quad, 0.5, 0.5, 4.0, 32, 32);
+    gluDeleteQuadric(quad);
+    glPopMatrix();
+
+    // Draw the wings (rectangles)
+    glColor3f(0.0, 0.7, 0.0); // Green color
+    glPushMatrix();
+    glTranslatef(0.0, -0.5, 0.0); // Position the wings
+    glScalef(6.0, 0.1, 1.5); // Width, height, depth
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the tail (vertical stabilizer and horizontal stabilizer)
+    glColor3f(0.7, 0.0, 0.0); // Red color
+    glPushMatrix();
+    glTranslatef(0.0, 1.5, -2.0); // Position the vertical stabilizer
+    glScalef(0.5, 2.0, 0.1); // Width, height, depth
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    glColor3f(0.7, 0.0, 0.0); // Red color
+    glPushMatrix();
+    glTranslatef(0.0, 0.0, -3.0); // Position the horizontal stabilizer
+    glScalef(3.0, 0.1, 0.5); // Width, height, depth
+    glutSolidCube(1.0);
+    glPopMatrix();
+
+    // Draw the engines (cylinders)
+    glColor3f(0.5, 0.5, 0.5); // Gray color
+    glPushMatrix();
+    glTranslatef(-2.0, -0.5, -0.5); // Position the left engine
+    glRotatef(90, 0.0, 1.0, 0.0); // Rotate the engine to align with the Z-axis
+    gluCylinder(quad, 0.2, 0.2, 1.0, 32, 32);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(2.0, -0.5, -0.5); // Position the right engine
+    glRotatef(90, 0.0, 1.0, 0.0); // Rotate the engine to align with the Z-axis
+    gluCylinder(quad, 0.2, 0.2, 1.0, 32, 32);
+    glPopMatrix();
+
+    // Draw the cockpit (a sphere)
+    glColor3f(0.0, 0.0, 0.7); // Dark blue color
+    glPushMatrix();
+    glTranslatef(0.0, 0.4, 2.0); // Position the cockpit
+    glutSolidSphere(0.3, 32, 32);
+    glPopMatrix();
+}
+
+// Display function to render the scene
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(ex, ey, ez, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    drawAirplane();
+    glutSwapBuffers();
+}
+
+// Reshape function to handle window resizing
+void reshape(int width, int height)
+{
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 1.0, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+// Keyboard function to handle input
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 27: // ESC key
+        exit(0);
+        break;
+    case '+':
+        ez -= 0.5; // Move the camera closer
+        break;
+    case '-':
+        ez += 0.5; // Move the camera further
+        break;
+    default:
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Arrow key function to handle special keys
+void specialKeys(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_LEFT:
+        ex -= 0.2; // Move the camera left
+        break;
+    case GLUT_KEY_RIGHT:
+        ex += 0.2; // Move the camera right
+        break;
+    case GLUT_KEY_UP:
+        ey += 0.2; // Move the camera up
+        break;
+    case GLUT_KEY_DOWN:
+        ey -= 0.2; // Move the camera down
+        break;
+    }
+    glutPostRedisplay(); // Redraw the scene
+}
+
+// Main function
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(640, 480);
+    glutInitWindowPosition(10, 10);
+    glutCreateWindow("3D Airplane Projection");
+
+    init();
+
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);
+
+    glutMainLoop();
+
+    return 0;
+}
